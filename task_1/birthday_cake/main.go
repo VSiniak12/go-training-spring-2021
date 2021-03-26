@@ -16,10 +16,6 @@ import (
 	How to convert character to ASCII and back: https://www.socketloop.com/tutorials/golang-how-to-convert-character-to-ascii-and-back
 */
 
-func main() {
-	fmt.Println(cake(300, "abc"))
-}
-
 func cake(x int, y string) string {
 	const alphabet = "abcdefghijklmnopqrstunwxyz"
 	var total int

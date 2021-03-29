@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -39,4 +38,9 @@ func isFire(total, x int) string {
 		result = "Fire"
 	}
 	return result
+}
+
+func main() {
+	cake(1, "abc")
+
 }

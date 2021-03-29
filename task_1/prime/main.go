@@ -22,18 +22,18 @@ Numbers go up to 2^31 (or similar, depends on language version). Looping all the
 */
 
 func isPrime(n int) bool {
-	result := true
 	if n > 1 {
-		for i := 2; i < n/2; i++ {
+		for i := 2; i <= n/2; i++ {
 			if n%i == 0 {
-				result = false
-				break
+				return false
 			}
 		}
+	} else {
+		return false
 	}
-	return result
+	return true
 }
 
 func main() {
-	fmt.Println(isPrime(5))
+	fmt.Println(isPrime(7))
 }

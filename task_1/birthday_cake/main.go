@@ -1,5 +1,9 @@
 package main
 
+import (
+	"strings"
+)
+
 /*
 	It's your Birthday. Your colleagues buy you a cake. The numbers of candles on the cake is provided (x). Please note this is not reality, and your age can be anywhere up to 1,000. Yes, you would look a mess.
 	As a surprise, your colleagues have arranged for your friend to hide inside the cake and burst out. They pretend this is for your benefit, but likely it is just because they want to see you fall over covered in cake. Sounds fun!
@@ -12,9 +16,31 @@ package main
 */
 
 func cake(x int, y string) string {
-	panic("Implement me!")
+	const alphabet = "abcdefghijklmnopqrstunwxyz"
+	var total int
+	for i, v := range strings.ToLower(y) {
+		if i%2 != 0 {
+			for indexA, valueA := range alphabet {
+				if valueA == v {
+					total = total + (indexA + 1)
+				}
+			}
+		} else {
+			total = total + int(v)
+		}
+	}
+	return isFire(total, x)
+}
+
+func isFire(total, x int) string {
+	result := "That was close!"
+	if (x*70)/100 < total {
+		result = "Fire!"
+	}
+	return result
 }
 
 func main() {
+	cake(1, "abc")
 
 }

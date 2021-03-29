@@ -35,7 +35,7 @@ func cake(x int, y string) string {
 func isFire(total, x int) string {
 	result := "That was close!"
 	if (x*70)/100 < total {
-		result = "Fire"
+		result = "Fire!"
 	}
 	return result
 }

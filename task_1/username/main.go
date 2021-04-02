@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"regexp"
+)
+
 /*
 	Write a simple regex to validate a username. Allowed characters are:
 	lowercase letters,
@@ -7,11 +12,12 @@ package main
 	underscore
 	Length should be between 4 and 16 characters (both included).
 */
-
 func isUsername(username string) bool {
-	panic("Implement me!")
+	matched, _ := regexp.MatchString(`^[a-z\d]+(_?[a-z\d]){4,16}$`, username)
+	return matched
 }
 
 func main() {
-
+	fmt.Println(isUsername("Hass"))
+	fmt.Println(isUsername("____"))
 }

@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Queue struct {
 	first *Node
@@ -14,6 +17,8 @@ type Node struct {
 	value interface{}
 }
 
+//Add an element to the end of the queue. Shifts the element currently at the end (
+//if any) to the left and increment size of queue
 func (q *Queue) Enqueue(value interface{}) {
 	node := &Node{
 		prev:  q.last,
@@ -30,35 +35,32 @@ func (q *Queue) Enqueue(value interface{}) {
 	q.size++
 }
 
-func (q *Queue) Dequeue() {
-	if q.size > 0 {
-		node := q.first.next
-		q.first = node
-		if q.size != 1 {
-			q.first.prev = nil
-		}
-		q.size--
-	} else {
-		fmt.Println("queue has not been initialized")
+//Remove an element from the front of the queue and decrement size of queue. If size of queue is equal 0,
+//that you will get an error
+func (q *Queue) Dequeue() error {
+	if q.size == 0 {
+		return errors.New("queue has not been initialized")
 	}
+	node := q.first.next
+	q.first = node
+	if q.size != 1 {
+		q.first.prev = nil
+	}
+	q.size--
+	return nil
 }
 
-func (q *Queue) Display() {
-	firstNode := q.first
-	for firstNode != nil {
-		fmt.Println(firstNode.value)
-		firstNode = firstNode.next
-	}
-}
-
+//Check if the queue is empty
 func (q *Queue) IsEmpty() bool {
 	return q.size == 0
 }
 
+//Check if the queue is full
 func (q *Queue) IsFull() bool {
 	return q.size != 0
 }
 
+//Get the value of the front of the queue without removing it
 func (q *Queue) Peek() interface{} {
 	return q.first.value
 }
@@ -72,9 +74,6 @@ func main() {
 	q.Enqueue(3)
 	q.Enqueue(4)
 	q.Enqueue(5)
-	q.Display()
-	q.Dequeue()
-	q.Display()
 	fmt.Println(q.IsEmpty())
 	fmt.Println(q.IsFull())
 	fmt.Println(q.Peek())

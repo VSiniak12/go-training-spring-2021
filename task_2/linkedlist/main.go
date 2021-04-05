@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
 )
 
 type LinkedList struct {
@@ -93,35 +94,81 @@ func (list *LinkedList) Delete(index int) error {
 	return nil
 }
 
+//Sort linkedlist in ascending order.
 func (list *LinkedList) Sort() {
+	firstNode := list.first
+	for firstNode != nil {
+		if firstNode.next != nil {
+			i, err := doThings(*firstNode, *firstNode.next)
+			if err != nil {
+				return
+			}
+			if i {
+				a := firstNode.value
+				b := firstNode.next.value
+				firstNode.value = b
+				firstNode.next.value = a
+				firstNode = list.first
+			} else {
+				firstNode = firstNode.next
+			}
+		} else {
+			return
+		}
+	}
+}
 
+func doThings(a Node, b Node) (bool, error) {
+	defer func() {
+		if v := recover(); v != nil {
+			fmt.Println("input values is not equal type")
+			os.Exit(0)
+		}
+	}()
+	switch a.value.(type) {
+	case int:
+		return a.value.(int) > b.value.(int), nil
+	case string:
+		return a.value.(string) > b.value.(string), nil
+	case rune:
+		return a.value.(rune) > b.value.(rune), nil
+	case float64:
+		return a.value.(float64) > b.value.(float64), nil
+	default:
+		return false, errors.New("type of node value have not yet put in library")
+	}
 }
 
 func main() {
 	linkedList := LinkedList{}
-	/*linkedList.Insert("1")
-	linkedList.Insert("1")
-	linkedList.Insert("2")
-	linkedList.Insert("3")*/
+	/*linkedList.Insert("s")
+	linkedList.Insert("sl")
+	linkedList.Insert("a")
+	linkedList.Insert("v")
+	linkedList.Insert("i")
+	linkedList.Insert("q")
+	linkedList.Insert("w")*/
+	linkedList.Insert('a')
+	linkedList.Insert('b')
+	linkedList.Insert('c')
+	linkedList.Insert('d')
+	linkedList.Insert('a')
+	linkedList.Insert('u')
 	/*linkedList.Insert(1)
+	linkedList.Insert(110)
 	linkedList.Insert(6)
 	linkedList.Insert(22)
 	linkedList.Insert(3)
 	linkedList.Insert(13)
 	linkedList.Insert(22)
+	linkedList.Insert(120)
+	linkedList.Insert(17)
 	linkedList.Insert(11)
-	linkedList.Insert(65)*/
-	linkedList.Display()
-	err := linkedList.Deletion()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("after deletion")
-	linkedList.Display()
-	err = linkedList.Delete(-5)
-	if err != nil {
-		fmt.Println(err)
-	}
+	linkedList.Insert(70)
+	linkedList.Insert(69)
+	linkedList.Insert(68)*/
 	linkedList.Display()
 	linkedList.Sort()
+	fmt.Println("!!!!after sorting:")
+	linkedList.Display()
 }

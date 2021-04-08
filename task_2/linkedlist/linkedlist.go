@@ -1,9 +1,9 @@
-package main
+package linkedlist
 
 import (
 	"errors"
 	"fmt"
-	"os"
+	"reflect"
 )
 
 type LinkedList struct {
@@ -18,13 +18,33 @@ type Node struct {
 	value interface{}
 }
 
+// define type string for struct Node
+func (n Node) String() string {
+	return fmt.Sprintf("%v", n.value)
+}
+
+// define type string for struct LinkedList
+func (l LinkedList) String() string {
+	s := make([]interface{}, 0, 1)
+	f := l.first
+	for f != nil {
+		s = append(s, f.value)
+		f = f.next
+	}
+	return fmt.Sprint(s)
+}
+
 //Inserts an element at the beginning of the list. Shifts the element currently at the beginning (
 //if any) to the right and increment size of list
-func (list *LinkedList) Insert(value interface{}) {
+func (list *LinkedList) Insert(value interface{}) error {
 	node := &Node{
 		next:  list.first,
 		value: value,
 	}
+	if list.size != 0 && reflect.TypeOf(list.first.value) != reflect.TypeOf(node.value) {
+		return fmt.Errorf("Invalid input value: %v", node.value)
+	}
+
 	if list.first != nil {
 		list.first.prev = node
 	}
@@ -34,6 +54,7 @@ func (list *LinkedList) Insert(value interface{}) {
 	}
 	list.last = node
 	list.size++
+	return nil
 }
 
 //Deletes an element at the beginning of the list and decrement size of list. If size of list is equal 0,
@@ -55,7 +76,7 @@ func (list *LinkedList) Deletion() error {
 func (list *LinkedList) Display() {
 	firstNode := list.first
 	for firstNode != nil {
-		fmt.Println(firstNode.value)
+		fmt.Println(firstNode)
 		firstNode = firstNode.next
 	}
 }
@@ -64,7 +85,7 @@ func (list *LinkedList) Display() {
 //that you will get an error
 func (list *LinkedList) Search(index int) (*Node, error) {
 	if index < 0 || index > list.size-1 {
-		return nil, fmt.Errorf("Index is %d and it out of list", index)
+		return nil, fmt.Errorf("Index equal %d and it out of list", index)
 	}
 	node := list.first
 	for i := 0; i != index; i++ {
@@ -94,81 +115,57 @@ func (list *LinkedList) Delete(index int) error {
 	return nil
 }
 
-//Sort linkedlist in ascending order.
-func (list *LinkedList) Sort() {
-	firstNode := list.first
-	for firstNode != nil {
-		if firstNode.next != nil {
-			i, err := doThings(*firstNode, *firstNode.next)
+//Sort linkedlist in ascending order. You have got error if type of node value have not yet put in library
+func (list *LinkedList) Sort() error {
+	currentNode := list.first
+	for currentNode != nil {
+		if currentNode.next != nil {
+			i, err := compareValue(*currentNode)
 			if err != nil {
-				return
+				return err
 			}
 			if i {
-				a := firstNode.value
-				b := firstNode.next.value
-				firstNode.value = b
-				firstNode.next.value = a
-				firstNode = list.first
+				swap(currentNode)
+				currentNode = list.first
 			} else {
-				firstNode = firstNode.next
+				currentNode = currentNode.next
 			}
 		} else {
-			return
+			break
 		}
 	}
+	return nil
 }
 
-func doThings(a Node, b Node) (bool, error) {
-	defer func() {
-		if v := recover(); v != nil {
-			fmt.Println("input values is not equal type")
-			os.Exit(0)
-		}
-	}()
-	switch a.value.(type) {
+func swap(node *Node) {
+	a1 := node.value
+	b1 := node.next.value
+	node.value = b1
+	node.next.value = a1
+}
+
+func compareValue(node Node) (bool, error) {
+	switch node.value.(type) {
 	case int:
-		return a.value.(int) > b.value.(int), nil
+		return node.value.(int) > node.next.value.(int), nil
 	case string:
-		return a.value.(string) > b.value.(string), nil
+		return node.value.(string) > node.next.value.(string), nil
 	case rune:
-		return a.value.(rune) > b.value.(rune), nil
+		return node.value.(rune) > node.next.value.(rune), nil
 	case float64:
-		return a.value.(float64) > b.value.(float64), nil
+		return node.value.(float64) > node.next.value.(float64), nil
 	default:
 		return false, errors.New("type of node value have not yet put in library")
 	}
 }
 
-func main() {
-	linkedList := LinkedList{}
-	/*linkedList.Insert("s")
-	linkedList.Insert("sl")
-	linkedList.Insert("a")
-	linkedList.Insert("v")
-	linkedList.Insert("i")
-	linkedList.Insert("q")
-	linkedList.Insert("w")*/
-	linkedList.Insert('a')
-	linkedList.Insert('b')
-	linkedList.Insert('c')
-	linkedList.Insert('d')
-	linkedList.Insert('a')
-	linkedList.Insert('u')
-	/*linkedList.Insert(1)
-	linkedList.Insert(110)
-	linkedList.Insert(6)
-	linkedList.Insert(22)
-	linkedList.Insert(3)
-	linkedList.Insert(13)
-	linkedList.Insert(22)
-	linkedList.Insert(120)
-	linkedList.Insert(17)
-	linkedList.Insert(11)
-	linkedList.Insert(70)
-	linkedList.Insert(69)
-	linkedList.Insert(68)*/
-	linkedList.Display()
-	linkedList.Sort()
-	fmt.Println("!!!!after sorting:")
-	linkedList.Display()
+//Make and initilization a linkedlist. You have got the error, if type of input value not equal first node.
+func Make(values ...interface{}) (*LinkedList, error) {
+	l := LinkedList{}
+	for _, v := range values {
+		if err := l.Insert(v); err != nil {
+			return nil, err
+		}
+	}
+	return &l, nil
 }

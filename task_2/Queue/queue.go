@@ -27,11 +27,11 @@ func (list *Queue) Sort() error {
 	currentNode := list.last
 	for currentNode != nil {
 		if currentNode.prev != nil {
-			i, err := compareValue(*currentNode)
+			currentNodeMorePrev, err := compareValue(*currentNode)
 			if err != nil {
 				return err
 			}
-			if i {
+			if currentNodeMorePrev {
 				swap(currentNode)
 				currentNode = list.last
 			} else {

@@ -120,11 +120,11 @@ func (list *LinkedList) Sort() error {
 	currentNode := list.first
 	for currentNode != nil {
 		if currentNode.next != nil {
-			i, err := compareValue(*currentNode)
+			currentNodeMoreNext, err := compareValue(*currentNode)
 			if err != nil {
 				return err
 			}
-			if i {
+			if currentNodeMoreNext {
 				swap(currentNode)
 				currentNode = list.first
 			} else {

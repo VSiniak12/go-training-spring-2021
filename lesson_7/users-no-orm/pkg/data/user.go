@@ -6,8 +6,8 @@ import (
 )
 
 type User struct {
-	Id int
-	Name string
+	Id      int
+	Name    string
 	Surname string
 }
 
@@ -15,12 +15,13 @@ type UserData struct {
 	db *sql.DB
 }
 
-func NewUserData(db *sql.DB) *UserData{
+func NewUserData(db *sql.DB) *UserData {
 	return &UserData{db: db}
 }
+
 func (u UserData) ReadAll() ([]User, error) {
 	var users []User
-	rows, err := u.db.Query("SELECT * from users")
+	rows, err := u.db.Query(readAllUsersQuery)
 	if err != nil {
 		return nil, fmt.Errorf("can't get users from database, error:%w", err)
 	}
